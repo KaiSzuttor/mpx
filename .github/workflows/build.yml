@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Install mpi
-      run: sudo apt-get install openmpi-common
+      run: sudo apt-get install libopenmpi-dev
     - name: Configure
       run: |
           mkdir build && cd build && cmake ..
