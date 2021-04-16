@@ -49,4 +49,7 @@ _deps
 
 # IDS
 .idea/
+.vscode/
 cmake-build-*
+build/
+
