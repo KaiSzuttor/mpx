@@ -6,26 +6,18 @@
 #include <type_traits>
 
 namespace mpx {
-struct MutableDataRange {
-  void *data;
+template <bool Const> struct DataRange {
+  std::conditional_t<Const, const void, void> *data;
   DataType type;
 
-  bool operator==(MutableDataRange const &rhs) const {
+  bool operator==(DataRange const &rhs) const {
     return std::tie(data, type) == std::tie(rhs.data, rhs.type);
   }
-  bool operator!=(MutableDataRange const &rhs) const {
-    return not(*this == rhs);
-  }
+  bool operator!=(DataRange const &rhs) const { return not(*this == rhs); }
 };
-struct ConstDataRange {
-  const void *data;
-  DataType type;
 
-  bool operator==(ConstDataRange const &rhs) const {
-    return std::tie(data, type) == std::tie(rhs.data, rhs.type);
-  }
-  bool operator!=(ConstDataRange const &rhs) const { return not(*this == rhs); }
-};
+using MutableDataRange = DataRange<false>;
+using ConstDataRange = DataRange<true>;
 
 template <class T>
 std::conditional_t<std::is_const_v<T>, ConstDataRange, MutableDataRange>
@@ -48,7 +40,7 @@ template <class T>
 struct data_range_for<
     T, std::enable_if_t<std::disjunction_v<std::is_same<T, MutableDataRange>,
                                            std::is_same<T, ConstDataRange>>>> {
-  static auto get(T data_range) { return data_range; }
+  static T get(T data_range) { return data_range; }
 };
 } // namespace mpx
 
