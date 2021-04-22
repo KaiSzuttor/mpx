@@ -12,14 +12,14 @@ template <> struct trivial_opt_in<Trivial> : std::true_type {};
 
 TEST_CASE("trivial types are arrays of bytes") {
   auto const expected = mpx::DataType{MPI_BYTE, sizeof(Trivial)};
-  auto const result = mpx::data_type_for<Trivial>{}();
+  auto const result = mpx::data_type_for<Trivial>::get();
 
   CHECK_EQ(expected, result);
 }
 
 TEST_CASE("supported types are mapped to build-in mpi types") {
   auto const expected = mpx::DataType{MPI_INT, 1};
-  auto const result = mpx::data_type_for<int>{}();
+  auto const result = mpx::data_type_for<int>::get();
 
   CHECK_EQ(expected, result);
 }

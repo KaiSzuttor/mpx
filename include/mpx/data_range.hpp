@@ -13,7 +13,7 @@ template <class T> struct DataRange {
 
 template <class T, class = void> struct data_range_for {
   DataRange<T> operator()(T &e) const {
-    return {std::addressof(e), data_type_for<std::remove_cv_t<T>>{}()};
+    return {std::addressof(e), data_type_for<std::remove_cv_t<T>>::get()};
   }
 };
 
