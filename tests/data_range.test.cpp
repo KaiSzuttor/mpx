@@ -4,9 +4,28 @@
 
 TEST_CASE("scalar types are a range of one") {
   int i;
-  auto const result = mpx::data_range_for<int>{}(i);
-  auto const expected = mpx::DataRange<int>{&i, mpx::data_type_for<int>::get()};
 
-  CHECK_EQ(result.data, expected.data);
-  CHECK_EQ(result.type, expected.type);
+  CHECK(mpx::data_range_for<int>::get(i) ==
+        mpx::MutableDataRange{&i, mpx::data_type_for<int>::get()});
+  CHECK(mpx::data_range_for<int>::get(std::as_const(i)) ==
+        mpx::ConstDataRange{&i, mpx::data_type_for<int>::get()});
+}
+
+TEST_CASE("data ranges are passed-thru") {
+  {
+    auto in_range = mpx::MutableDataRange{(void *)0xdeadbeef, {}};
+    CHECK(mpx::data_range_for<mpx::MutableDataRange>::get(in_range) ==
+          in_range);
+  }
+
+  {
+    auto in_range = mpx::ConstDataRange{(void *)0xdeadbeef, {}};
+    CHECK(mpx::data_range_for<mpx::ConstDataRange>::get(in_range) == in_range);
+  }
+}
+
+TEST_CASE("make_data_range") {
+  const int i = 5;
+  CHECK(mpx::make_data_range(&i, 5) ==
+        mpx::ConstDataRange{reinterpret_cast<const void *>(&i), {MPI_INT, 5}});
 }

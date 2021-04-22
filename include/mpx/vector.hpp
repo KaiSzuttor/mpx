@@ -6,21 +6,13 @@
 #include <vector>
 
 namespace mpx {
-template <class T> struct data_range_for<std::vector<T>> {
-  DataRange<T> operator()(std::vector<T> &e) const {
-    auto const element_type = data_type_for<std::remove_cv_t<T>>::get();
-
-    return {e.data(),
-            DataType{element_type.type,
-                     static_cast<int>(e.size() * element_type.count)}};
+template <class T> struct data_range_for<std::vector<T>> {  
+  static MutableDataRange get(std::vector<T> &v) {
+    return make_data_range(v.data(), v.size());
   }
 
-  DataRange<const T> operator()(std::vector<T> const &e) const {
-    auto const element_type = data_type_for<std::remove_cv_t<T>>::get();
-
-    return {e.data(),
-            DataType{element_type.type,
-                     static_cast<int>(e.size() * element_type.count)}};
+  static ConstDataRange get(std::vector<T> const&v) {
+    return make_data_range(v.data(), v.size());
   }
 };
 } // namespace mpx
