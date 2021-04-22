@@ -8,7 +8,7 @@
 namespace mpx {
 struct DataType {
   MPI_Datatype type = MPI_DATATYPE_NULL;
-  size_t count = 0;
+  int count = 0;
 
   bool operator==(DataType const &rhs) const {
     return std::tie(type, count) == std::tie(rhs.type, rhs.count);
@@ -17,12 +17,11 @@ struct DataType {
 };
 
 template <class T, class = void> struct data_type_for {};
-
 template <class T, class = void> struct trivial_opt_in : std::false_type {};
 template <class T>
 struct data_type_for<T, std::enable_if_t<std::is_trivially_copyable_v<T> and
                                          trivial_opt_in<T>::value>> {
-  DataType operator()() const { return {MPI_BYTE, sizeof(T)}; }
+  static DataType get() { return {MPI_BYTE, sizeof(T)}; }
 };
 
 /**
@@ -80,7 +79,7 @@ template <> struct is_builtin_type<unsigned long long> : std::true_type {
 
 template <class T>
 struct data_type_for<T, std::enable_if_t<is_builtin_type<T>::value>> {
-  DataType operator()() const { return {is_builtin_type<T>::mpi_type(), 1}; }
+  static DataType get() { return {is_builtin_type<T>::mpi_type(), 1}; }
 };
 } // namespace mpx
 

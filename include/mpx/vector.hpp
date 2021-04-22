@@ -8,7 +8,7 @@
 namespace mpx {
 template <class T> struct data_range_for<std::vector<T>> {
   DataRange<T> operator()(std::vector<T> &e) const {
-    auto const element_type = data_type_for<std::remove_cv_t<T>>{}();
+    auto const element_type = data_type_for<std::remove_cv_t<T>>::get();
 
     return {e.data(),
             DataType{element_type.type,
@@ -16,7 +16,7 @@ template <class T> struct data_range_for<std::vector<T>> {
   }
 
   DataRange<const T> operator()(std::vector<T> const &e) const {
-    auto const element_type = data_type_for<std::remove_cv_t<T>>{}();
+    auto const element_type = data_type_for<std::remove_cv_t<T>>::get();
 
     return {e.data(),
             DataType{element_type.type,

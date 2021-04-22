@@ -22,7 +22,7 @@ template <> struct trivial_opt_in<Trivial> : std::true_type {};
 TEST_CASE("data range for vectors of trivial type") {
   std::vector<Trivial> vec(4);
 
-  auto const element_type = mpx::data_type_for<decltype(vec)::value_type>{}();
+  auto const element_type = mpx::data_type_for<decltype(vec)::value_type>::get();
 
   auto const result = mpx::data_range_for<decltype(vec)>{}(vec);
 
