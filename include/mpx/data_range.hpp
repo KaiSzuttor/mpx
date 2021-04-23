@@ -36,11 +36,10 @@ template <class T, class = void> struct data_range_for {
   }
 };
 
-template <class T>
-struct data_range_for<
-    T, std::enable_if_t<std::disjunction_v<std::is_same<T, MutableDataRange>,
-                                           std::is_same<T, ConstDataRange>>>> {
-  static T get(T data_range) { return data_range; }
+template <bool Const> struct data_range_for<DataRange<Const>> {
+  static DataRange<Const> get(DataRange<Const> data_range) {
+    return data_range;
+  }
 };
 } // namespace mpx
 
