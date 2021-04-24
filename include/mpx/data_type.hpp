@@ -6,15 +6,7 @@
 #include <mpi.h>
 
 namespace mpx {
-struct DataType {
-  MPI_Datatype type = MPI_DATATYPE_NULL;
-  int count = 0;
-
-  bool operator==(DataType const &rhs) const {
-    return std::tie(type, count) == std::tie(rhs.type, rhs.count);
-  }
-  bool operator!=(DataType const &rhs) const { return not(*this == rhs); }
-};
+using DataType = MPI_Datatype;
 
 template <class T, class = void> struct data_type_for {};
 
@@ -73,7 +65,7 @@ template <> struct is_builtin_type<unsigned long long> : std::true_type {
 
 template <class T>
 struct data_type_for<T, std::enable_if_t<is_builtin_type<T>::value>> {
-  static DataType get() { return {is_builtin_type<T>::mpi_type(), 1}; }
+  static DataType get() { return is_builtin_type<T>::mpi_type(); }
 };
 } // namespace mpx
 

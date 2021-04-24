@@ -6,9 +6,9 @@ TEST_CASE("scalar types are a range of one") {
   int i;
 
   CHECK(mpx::data_range_for<int>::get(i) ==
-        mpx::MutableDataRange{&i, mpx::data_type_for<int>::get()});
+        mpx::MutableDataRange{&i, 1, mpx::data_type_for<int>::get()});
   CHECK(mpx::data_range_for<int>::get(std::as_const(i)) ==
-        mpx::ConstDataRange{&i, mpx::data_type_for<int>::get()});
+        mpx::ConstDataRange{&i, 1, mpx::data_type_for<int>::get()});
 }
 
 TEST_CASE("data ranges are passed-thru") {
@@ -27,5 +27,5 @@ TEST_CASE("data ranges are passed-thru") {
 TEST_CASE("make_data_range") {
   const int i = 5;
   CHECK(mpx::make_data_range(&i, 5) ==
-        mpx::ConstDataRange{reinterpret_cast<const void *>(&i), {MPI_INT, 5}});
+        mpx::ConstDataRange{reinterpret_cast<const void *>(&i), 5, MPI_INT});
 }

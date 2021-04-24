@@ -8,10 +8,12 @@
 namespace mpx {
 template <bool Const> struct DataRange {
   std::conditional_t<Const, const void, void> *data;
+  int count;
   DataType type;
 
   bool operator==(DataRange const &rhs) const {
-    return std::tie(data, type) == std::tie(rhs.data, rhs.type);
+    return std::tie(data, count, type) ==
+           std::tie(rhs.data, rhs.count, rhs.type);
   }
   bool operator!=(DataRange const &rhs) const { return not(*this == rhs); }
 };
@@ -23,8 +25,7 @@ template <class T>
 std::conditional_t<std::is_const_v<T>, ConstDataRange, MutableDataRange>
 make_data_range(T *data, size_t size) {
   static auto const element_type = data_type_for<std::remove_cv_t<T>>::get();
-  return {data,
-          {element_type.type, static_cast<int>(size) * element_type.count}};
+  return {data, static_cast<int>(size), element_type};
 }
 
 template <class T, class = void> struct data_range_for {
