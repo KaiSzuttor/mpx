@@ -17,12 +17,6 @@ struct DataType {
 };
 
 template <class T, class = void> struct data_type_for {};
-template <class T, class = void> struct trivial_opt_in : std::false_type {};
-template <class T>
-struct data_type_for<T, std::enable_if_t<std::is_trivially_copyable_v<T> and
-                                         trivial_opt_in<T>::value>> {
-  static DataType get() { return {MPI_BYTE, sizeof(T)}; }
-};
 
 /**
  * @brief Type traits marking built-in mpi types.
