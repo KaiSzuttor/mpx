@@ -1,4 +1,5 @@
 # mpx
+ ![logo](data/logo.png)
 
 `mpx` is a light-wright for the C API of the message passing interface (MPI).
 
